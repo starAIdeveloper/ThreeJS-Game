@@ -2,7 +2,7 @@
 
 This repo contains agent workflow assets for Three.js browser-game development. For broad requests to build, upgrade, polish, or finish a Three.js game, start from `skills/threejs-game-director/SKILL.md` — it routes work across the specialist skills (gameplay, AAA graphics, UI, debug/profile, QA/release, 3D/image/audio generation). The user should not have to name every specialist skill.
 
-The same nine skills serve Codex and Claude Code. The user's requested scope, art style, constraints, and prior decisions take precedence over skill defaults. Use the runner's available tools; skills do not enable native async APIs or change model settings.
+The same ten skills serve Codex and Claude Code. The user's requested scope, art style, constraints, and prior decisions take precedence over skill defaults. Use the runner's available tools; skills do not enable native async APIs or change model settings.
 
 ## Coordination
 
