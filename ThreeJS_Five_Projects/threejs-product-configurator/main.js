@@ -1,0 +1,11 @@
+import {world,box,THREE,download} from './scene.js';
+const {scene,animate}=world();const product=new THREE.Group();scene.add(product);
+box(scene,[8,.1,8],[0,-.1,0],'#283e50','Display platform');
+const base=box(product,[2,.2,2],[0,.1,0],'#e6ad63','Lamp base');
+const stem=box(product,[.12,2,.12],[0,1.2,0],'#e6ad63','Lamp stem');
+const shade=new THREE.Mesh(new THREE.ConeGeometry(.85,.8,48,1,true),new THREE.MeshStandardMaterial({color:'#e6ad63',side:THREE.DoubleSide}));shade.position.y=2.5;shade.userData.label='Lamp shade';product.add(shade);
+const state={color:'#e6ad63',height:2};
+document.querySelector('#color').oninput=e=>{state.color=e.target.value;[base,stem,shade].forEach(m=>m.material.color.set(state.color));};
+document.querySelector('#height').oninput=e=>{state.height=Number(e.target.value);stem.scale.y=state.height/2;stem.position.y=.2+state.height/2;shade.position.y=state.height+.5;};
+document.querySelector('#export').onclick=()=>download(state,'lamp-configuration.json');
+animate(dt=>{if(document.querySelector('#spin').checked)product.rotation.y+=dt*.4;});
