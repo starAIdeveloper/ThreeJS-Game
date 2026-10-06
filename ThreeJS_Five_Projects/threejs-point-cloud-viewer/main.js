@@ -1,0 +1,6 @@
+import {world,THREE} from './scene.js';import {parseXYZ} from './model.js';
+const {scene,controls}=world();let cloud;const material=new THREE.PointsMaterial({size:.04,color:'#70dfcc'});
+function show(points){if(cloud){scene.remove(cloud);cloud.geometry.dispose();}const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(points,3));g.computeBoundingBox();g.center();g.computeBoundingSphere();const radius=g.boundingSphere.radius;if(radius>0)g.scale(3/radius,3/radius,3/radius);cloud=new THREE.Points(g,material);scene.add(cloud);controls.target.set(0,0,0);document.querySelector('#status').textContent=(points.length/3)+' points. Centered and normalized to display scale.';}
+function sample(){const p=[];for(let i=0;i<5000;i++){const t=i*.02;p.push(Math.cos(t)*2, i/1000-2.5, Math.sin(t)*2);}show(p);}sample();
+document.querySelector('#file').onchange=async e=>{try{const f=e.target.files[0];if(!f)return;if(f.size>10*1024*1024)throw Error('Maximum file size is 10 MB');show(parseXYZ(await f.text()));}catch(err){document.querySelector('#status').textContent=err.message;}};
+document.querySelector('#size').oninput=e=>material.size=Number(e.target.value);document.querySelector('#color').oninput=e=>material.color.set(e.target.value);document.querySelector('#sample').onclick=sample;
