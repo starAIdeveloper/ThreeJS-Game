@@ -1,0 +1,21 @@
+{
+  "status": "passed",
+  "viewports": [
+    "1536x1100",
+    "390x844"
+  ],
+  "checks": [
+    "sample analysis",
+    "playback seek",
+    "safe annotation",
+    "CSV download",
+    "track selection",
+    "heatmap filter",
+    "four-corner calibration",
+    "annotation persistence",
+    "mobile overflow",
+    "three sports",
+    "real upload"
+  ],
+  "console_errors": []
+}
