@@ -1,10 +1,309 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>SportsVision | Match analysis</title><link rel="stylesheet" href="/style.css"></head><body>
-<aside class="sidebar"><a class="brand" href="/"><span class="brand-mark">◈</span><span>Sports<span class="green">Vision</span><small>PERFORMANCE WORKSPACE</small></span></a><div class="nav-label">WORKSPACE</div><div class="nav active">▦ &nbsp; Match analysis <i></i></div><div class="nav-label">SELECT YOUR SPORT</div><button class="sport active" data-sport="football">⚽ &nbsp; Football</button><button class="sport" data-sport="basketball">◉ &nbsp; Basketball</button><button class="sport" data-sport="volleyball">◎ &nbsp; Volleyball</button><div class="sidebar-bottom"><div class="local-icon">⌁</div><b>Your footage. Your workspace.</b><p>Videos stay on the machine running this app.</p><span class="local-label">● LOCAL PROCESSING</span></div></aside>
-<main><header><div class="crumb">WORKSPACE <span>/</span> MATCH ANALYSIS</div><div class="header-right"><span class="status-dot"></span> Analysis workspace <span class="avatar">SV</span></div></header><section class="page-heading"><div><div class="eyebrow">SEE THE GAME DIFFERENTLY</div><h1><span id="sportTitle">Football</span> analysis<span class="green">.</span></h1><p>Track movement. Explore patterns. Review every moment.</p></div><div class="actions"><button id="sampleBtn" class="secondary">▷ Try sample clip</button><label class="primary" for="upload">↑ Upload video</label><input type="file" id="upload" accept="video/*" hidden></div></section><div id="notice" class="notice" role="status">Fixed-camera motion tracking is ready. Upload a clip or explore the generated sample.</div>
-<div class="dashboard"><div class="left-column"><section class="panel video-panel"><div class="panel-title"><div><span class="live-dot"></span><b id="clipTitle">Match workspace</b></div><span id="sourceBadge" class="badge">NO CLIP LOADED</span></div><div class="video-wrap"><video id="video" controls playsinline preload="metadata"></video><canvas id="overlay" aria-label="Tracking overlays"></canvas><div id="emptyVideo"><span class="empty-symbol">⌁</span><h2>From footage to insight.</h2><p>Upload a fixed-camera sports clip to analyze movement,<br>or start with our original generated training footage.</p><button id="emptySample" class="primary">Explore sample →</button><small>Up to 200 MB / 3 minutes · MP4, MOV, AVI, MKV, WebM</small></div><div id="calibrationHint" hidden>Click corners: top-left → top-right → bottom-right → bottom-left</div></div><div class="video-toolbar"><span id="detectorLabel">OpenCV motion analysis</span><div><label><input id="boxes" type="checkbox" checked>Tracking</label><label><input id="trails" type="checkbox" checked>Trails</label><label><input id="poses" type="checkbox" checked>Pose</label></div></div></section>
-<div class="stat-grid"><article class="panel stat"><span class="stat-icon">↗</span><div><small>Peak observed speed</small><strong id="maxSpeed">N/A</strong></div></article><article class="panel stat"><span class="stat-icon">⌁</span><div><small>Tracked distance</small><strong id="distance">N/A</strong></div></article><article class="panel stat"><span class="stat-icon">◎</span><div><small>Track fragments</small><strong id="trackCount">0</strong></div></article><article class="panel stat"><span class="stat-icon">◷</span><div><small>Clip duration</small><strong id="duration">0:00</strong></div></article></div>
-<div class="chart-grid"><section class="panel"><div class="panel-title"><h2>Movement intensity</h2><span id="speedUnit" class="muted">Calibration required</span></div><canvas id="speedChart" width="700" height="240" aria-label="Speed over time"></canvas><div class="chart-foot"><span class="legend-dot"></span><span id="chartLegend">Select a track after analysis</span><span class="muted">Observed samples</span></div></section><section class="panel"><div class="panel-title"><h2>Player trajectory</h2><span class="badge">PATH VIEW</span></div><canvas id="trajectory" width="640" height="340" aria-label="Court trajectory"></canvas><div class="chart-foot"><span class="legend-dot"></span><span id="pathLabel">Court projection</span></div></section></div>
-<section class="panel events-panel"><div class="panel-title"><div><h2>Key moments</h2><small class="muted">Your annotations, linked to the timeline</small></div><button id="eventBtn" class="secondary" disabled>＋ Add moment</button></div><div id="events" class="event-list"><p class="empty-text">Mark a pass, shot, goal, foul or highlight while reviewing your video.</p></div></section><section class="method-note"><span>ⓘ</span><p>Track IDs are fragments, not verified player identities. Motion tracking needs a stationary camera. Physical speed and distance require accurate court calibration. Passes, possession and action labels are not inferred.</p></section></div>
-<div class="right-column"><section class="panel"><div class="panel-title"><h2>Tracked movement</h2><span id="trackBadge" class="badge">0 TRACKS</span></div><div id="players" class="player-list"><p class="empty-text">Tracked objects will appear here once your clip is analyzed.</p></div></section><section class="panel"><div class="panel-title"><h2>Occupancy heatmap</h2><select id="heatScope" aria-label="Heatmap scope"><option value="all">All tracks</option><option value="selected">Selected track</option></select></div><canvas id="heatmap" width="640" height="340" aria-label="Occupancy heatmap"></canvas><div class="heat-legend"><span>Less time</span><i></i><span>More time</span></div><small id="heatUnit" class="muted">Normalized image positions until calibrated</small></section>
-<section class="panel calibration-panel"><div class="panel-title"><h2>Court calibration</h2><span id="calBadge" class="badge">OPTIONAL</span></div><p>Choose four court corners in the paused video to estimate movement in metres.</p><div class="dimension-row"><label>Length (m)<input type="number" id="courtWidth" min="1" max="200" value="105"></label><label>Width (m)<input type="number" id="courtHeight" min="1" max="200" value="68"></label></div><button id="calibrateBtn" class="secondary full" disabled>⌖ Select court corners</button><button id="applyCalibration" class="primary full" hidden>Apply & reanalyze</button><button id="cancelCalibration" class="text-button full" hidden>Cancel selection</button><small>Use fixed-camera footage. Camera motion invalidates the projection.</small></section><section class="panel export-panel"><div class="panel-title"><h2>Analysis exports</h2><span>↓</span></div><p>Take the observations into your own workflow.</p><div class="export-links"><a id="csvLink" aria-disabled="true">Track data CSV ↗</a><a id="jsonLink" aria-disabled="true">Full analysis JSON ↗</a></div></section></div></div><footer>SPORTSVISION <span>Built for thoughtful performance analysis.</span><span>LOCAL WORKSPACE</span></footer></main>
-<dialog id="eventDialog"><form id="eventForm"><h2>Add a key moment</h2><p id="eventTime" class="muted"></p><label>Type<select id="eventKind"><option>Pass</option><option>Shot</option><option>Goal</option><option>Foul</option><option>Highlight</option></select></label><label>Note<input id="eventNote" maxlength="160" placeholder="What happened in this moment?"></label><div class="actions"><button type="button" id="closeEvent" class="secondary">Cancel</button><button type="submit" class="primary">Save moment</button></div></form></dialog><script src="/app.js" type="module"></script></body></html>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>SportsVision | Match analysis</title>
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <aside class="sidebar">
+      <a class="brand" href="/"
+        ><span class="brand-mark">◈</span
+        ><span
+          >Sports<span class="green">Vision</span
+          ><small>PERFORMANCE WORKSPACE</small></span
+        ></a
+      >
+      <div class="nav-label">WORKSPACE</div>
+      <div class="nav active">▦ &nbsp; Match analysis <i></i></div>
+      <div class="nav-label">SELECT YOUR SPORT</div>
+      <button class="sport active" data-sport="football">
+        ⚽ &nbsp; Football</button
+      ><button class="sport" data-sport="basketball">◉ &nbsp; Basketball</button
+      ><button class="sport" data-sport="volleyball">
+        ◎ &nbsp; Volleyball
+      </button>
+      <div class="sidebar-bottom">
+        <div class="local-icon">⌁</div>
+        <b>Your footage. Your workspace.</b>
+        <p>Videos stay on the machine running this app.</p>
+        <span class="local-label">● LOCAL PROCESSING</span>
+      </div>
+    </aside>
+    <main>
+      <header>
+        <div class="crumb">WORKSPACE <span>/</span> MATCH ANALYSIS</div>
+        <div class="header-right">
+          <span class="status-dot"></span> Analysis workspace
+          <span class="avatar">SV</span>
+        </div>
+      </header>
+      <section class="page-heading">
+        <div>
+          <div class="eyebrow">SEE THE GAME DIFFERENTLY</div>
+          <h1>
+            <span id="sportTitle">Football</span> analysis<span class="green"
+              >.</span
+            >
+          </h1>
+          <p>Track movement. Explore patterns. Review every moment.</p>
+        </div>
+        <div class="actions">
+          <button id="sampleBtn" class="secondary">▷ Try sample clip</button
+          ><label class="primary" for="upload">↑ Upload video</label
+          ><input type="file" id="upload" accept="video/*" hidden />
+        </div>
+      </section>
+      <div id="notice" class="notice" role="status">
+        Fixed-camera motion tracking is ready. Upload a clip or explore the
+        generated sample.
+      </div>
+      <div class="dashboard">
+        <div class="left-column">
+          <section class="panel video-panel">
+            <div class="panel-title">
+              <div>
+                <span class="live-dot"></span
+                ><b id="clipTitle">Match workspace</b>
+              </div>
+              <span id="sourceBadge" class="badge">NO CLIP LOADED</span>
+            </div>
+            <div class="video-wrap">
+              <video id="video" controls playsinline preload="metadata"></video
+              ><canvas id="overlay" aria-label="Tracking overlays"></canvas>
+              <div id="emptyVideo">
+                <span class="empty-symbol">⌁</span>
+                <h2>From footage to insight.</h2>
+                <p>
+                  Upload a fixed-camera sports clip to analyze movement,<br />or
+                  start with our original generated training footage.
+                </p>
+                <button id="emptySample" class="primary">
+                  Explore sample →</button
+                ><small
+                  >Up to 200 MB / 3 minutes · MP4, MOV, AVI, MKV, WebM</small
+                >
+              </div>
+              <div id="calibrationHint" hidden>
+                Click corners: top-left → top-right → bottom-right → bottom-left
+              </div>
+            </div>
+            <div class="video-toolbar">
+              <span id="detectorLabel">OpenCV motion analysis</span>
+              <div>
+                <label
+                  ><input id="boxes" type="checkbox" checked />Tracking</label
+                ><label
+                  ><input id="trails" type="checkbox" checked />Trails</label
+                ><label><input id="poses" type="checkbox" checked />Pose</label>
+              </div>
+            </div>
+          </section>
+          <div class="stat-grid">
+            <article class="panel stat">
+              <span class="stat-icon">↗</span>
+              <div>
+                <small>Peak observed speed</small
+                ><strong id="maxSpeed">N/A</strong>
+              </div>
+            </article>
+            <article class="panel stat">
+              <span class="stat-icon">⌁</span>
+              <div>
+                <small>Tracked distance</small
+                ><strong id="distance">N/A</strong>
+              </div>
+            </article>
+            <article class="panel stat">
+              <span class="stat-icon">◎</span>
+              <div>
+                <small>Track fragments</small><strong id="trackCount">0</strong>
+              </div>
+            </article>
+            <article class="panel stat">
+              <span class="stat-icon">◷</span>
+              <div>
+                <small>Clip duration</small><strong id="duration">0:00</strong>
+              </div>
+            </article>
+          </div>
+          <div class="chart-grid">
+            <section class="panel">
+              <div class="panel-title">
+                <h2>Movement intensity</h2>
+                <span id="speedUnit" class="muted">Calibration required</span>
+              </div>
+              <canvas
+                id="speedChart"
+                width="700"
+                height="240"
+                aria-label="Speed over time"
+              ></canvas>
+              <div class="chart-foot">
+                <span class="legend-dot"></span
+                ><span id="chartLegend">Select a track after analysis</span
+                ><span class="muted">Observed samples</span>
+              </div>
+            </section>
+            <section class="panel">
+              <div class="panel-title">
+                <h2>Player trajectory</h2>
+                <span class="badge">PATH VIEW</span>
+              </div>
+              <canvas
+                id="trajectory"
+                width="640"
+                height="340"
+                aria-label="Court trajectory"
+              ></canvas>
+              <div class="chart-foot">
+                <span class="legend-dot"></span
+                ><span id="pathLabel">Court projection</span>
+              </div>
+            </section>
+          </div>
+          <section class="panel events-panel">
+            <div class="panel-title">
+              <div>
+                <h2>Key moments</h2>
+                <small class="muted"
+                  >Your annotations, linked to the timeline</small
+                >
+              </div>
+              <button id="eventBtn" class="secondary" disabled>
+                ＋ Add moment
+              </button>
+            </div>
+            <div id="events" class="event-list">
+              <p class="empty-text">
+                Mark a pass, shot, goal, foul or highlight while reviewing your
+                video.
+              </p>
+            </div>
+          </section>
+          <section class="method-note">
+            <span>ⓘ</span>
+            <p>
+              Track IDs are fragments, not verified player identities. Motion
+              tracking needs a stationary camera. Physical speed and distance
+              require accurate court calibration. Passes, possession and action
+              labels are not inferred.
+            </p>
+          </section>
+        </div>
+        <div class="right-column">
+          <section class="panel">
+            <div class="panel-title">
+              <h2>Tracked movement</h2>
+              <span id="trackBadge" class="badge">0 TRACKS</span>
+            </div>
+            <div id="players" class="player-list">
+              <p class="empty-text">
+                Tracked objects will appear here once your clip is analyzed.
+              </p>
+            </div>
+          </section>
+          <section class="panel">
+            <div class="panel-title">
+              <h2>Occupancy heatmap</h2>
+              <select id="heatScope" aria-label="Heatmap scope">
+                <option value="all">All tracks</option>
+                <option value="selected">Selected track</option>
+              </select>
+            </div>
+            <canvas
+              id="heatmap"
+              width="640"
+              height="340"
+              aria-label="Occupancy heatmap"
+            ></canvas>
+            <div class="heat-legend">
+              <span>Less time</span><i></i><span>More time</span>
+            </div>
+            <small id="heatUnit" class="muted"
+              >Normalized image positions until calibrated</small
+            >
+          </section>
+          <section class="panel calibration-panel">
+            <div class="panel-title">
+              <h2>Court calibration</h2>
+              <span id="calBadge" class="badge">OPTIONAL</span>
+            </div>
+            <p>
+              Choose four court corners in the paused video to estimate movement
+              in metres.
+            </p>
+            <div class="dimension-row">
+              <label
+                >Length (m)<input
+                  type="number"
+                  id="courtWidth"
+                  min="1"
+                  max="200"
+                  value="105" /></label
+              ><label
+                >Width (m)<input
+                  type="number"
+                  id="courtHeight"
+                  min="1"
+                  max="200"
+                  value="68"
+              /></label>
+            </div>
+            <button id="calibrateBtn" class="secondary full" disabled>
+              ⌖ Select court corners</button
+            ><button id="applyCalibration" class="primary full" hidden>
+              Apply & reanalyze</button
+            ><button id="cancelCalibration" class="text-button full" hidden>
+              Cancel selection</button
+            ><small
+              >Use fixed-camera footage. Camera motion invalidates the
+              projection.</small
+            >
+          </section>
+          <section class="panel export-panel">
+            <div class="panel-title">
+              <h2>Analysis exports</h2>
+              <span>↓</span>
+            </div>
+            <p>Take the observations into your own workflow.</p>
+            <div class="export-links">
+              <a id="csvLink" aria-disabled="true">Track data CSV ↗</a
+              ><a id="jsonLink" aria-disabled="true">Full analysis JSON ↗</a>
+            </div>
+          </section>
+        </div>
+      </div>
+      <footer>
+        SPORTSVISION <span>Built for thoughtful performance analysis.</span
+        ><span>LOCAL WORKSPACE</span>
+      </footer>
+    </main>
+    <dialog id="eventDialog">
+      <form id="eventForm">
+        <h2>Add a key moment</h2>
+        <p id="eventTime" class="muted"></p>
+        <label
+          >Type<select id="eventKind">
+            <option>Pass</option>
+            <option>Shot</option>
+            <option>Goal</option>
+            <option>Foul</option>
+            <option>Highlight</option>
+          </select></label
+        ><label
+          >Note<input
+            id="eventNote"
+            maxlength="160"
+            placeholder="What happened in this moment?"
+        /></label>
+        <div class="actions">
+          <button type="button" id="closeEvent" class="secondary">Cancel</button
+          ><button type="submit" class="primary">Save moment</button>
+        </div>
+      </form>
+    </dialog>
+    <script src="/app.js" type="module"></script>
+  </body>
+</html>

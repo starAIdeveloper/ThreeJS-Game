@@ -58,15 +58,17 @@ def run(identity, source, sport, options, synthetic=False):
     try:
         p=folder(identity)
         if synthetic: generate(source, sport)
+        previous = read_result(identity) if (p/'result.json').exists() else None
         def progress(value):
             with lock: jobs[identity]['progress'] = round(value*90)
         weights = os.environ.get('SPORTSVISION_POSE_WEIGHTS')
         detector = PoseDetector(weights) if weights else None
         result = analyze_video(source, detector=detector, points=options.points,
                                dimensions=(options.width, options.height), progress=progress)
-        result.update(id=identity, sport=sport, synthetic=synthetic,
-                      detector='pose' if weights else 'motion', title='Generated training clip' if synthetic else 'Uploaded video')
-        if (p/'result.json').exists(): result['events']=read_result(identity)['events']
+        is_synthetic = synthetic or bool(previous and previous['synthetic'])
+        result.update(id=identity, sport=sport, synthetic=is_synthetic,
+                      detector='pose' if weights else 'motion', title='Generated training clip' if is_synthetic else 'Uploaded video')
+        if previous: result['events']=previous['events']
         with lock: jobs[identity]['progress']=94
         if not shutil.which('ffmpeg'): raise RuntimeError('Install ffmpeg for browser-compatible playback.')
         subprocess.run(['ffmpeg','-y','-v','error','-i',str(source),'-an','-vf',
