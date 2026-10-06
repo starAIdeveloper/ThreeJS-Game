@@ -1,0 +1,32 @@
+name: SportsVision validation
+on:
+  push:
+    paths: ['SportsVision/**', '.github/workflows/sportsvision-tests.yml']
+  pull_request:
+    paths: ['SportsVision/**', '.github/workflows/sportsvision-tests.yml']
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: SportsVision
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: sudo apt-get update && sudo apt-get install -y ffmpeg
+      - run: pip install -r requirements-dev.txt
+      - run: pytest -q
+      - run: playwright install --with-deps chromium
+      - run: python scripts/browser_check.py
+        env:
+          SPORTSVISION_START_SERVER: '1'
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: sportsvision-browser-evidence
+          path: SportsVision/artifacts/
